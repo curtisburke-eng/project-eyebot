@@ -19,7 +19,7 @@ class radioStationPub : public rclcpp::Node {
     private:
         void callback() {
             auto message = std_msgs::msg::String();
-            message.data = 1;                                                                               // THIS is the radio station number 
+            message.data = "1";                                                                               // THIS is the radio station number 
             RCLCPP_INFO(this->get_logger(), "Publishing Radio Station: %s", message.data.c_str());
             publisher_->publish(message);
         }
