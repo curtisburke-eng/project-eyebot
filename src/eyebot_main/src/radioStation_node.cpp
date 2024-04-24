@@ -14,9 +14,8 @@ public:
     }
 
 private:
-    void callbackRadioStation(const example_interfaces::msg::String::SharedPtr msg)
-    {
-        RCLCPP_INFO(this->get_logger(), "%s", msg->data.c_str());
+    void callbackRadioStation(const example_interfaces::msg::String::SharedPtr msg) {
+        RCLCPP_INFO(this->get_logger(),"Radio Station: %s", msg->data.c_str());
     }
     rclcpp::Subscription<example_interfaces::msg::String>::SharedPtr subscriber_;
 };
