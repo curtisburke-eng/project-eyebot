@@ -27,7 +27,7 @@ class radioStationPub : public rclcpp::Node {
             }
             count_++;
 
-            RCLCPP_INFO(this->get_logger(), "Publishing Radio Station: %d", message.data);
+            RCLCPP_INFO(this->get_logger(), "Publishing Radio Station: %s", message.data.c_str());
             publisher_->publish(message);
         }
 

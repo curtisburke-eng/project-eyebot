@@ -22,8 +22,8 @@ class radioStationSub : public rclcpp::Node {
 
     private:
         void topic_callback(const std_msgs::msg::int8 & msg) const {
-            RCLCPP_INFO(this->get_logger(), "Radio Station Recieved: %d", msg.data);
-            checkNewStation(msg.data.c_str());
+            RCLCPP_INFO(this->get_logger(), "Radio Station Recieved: %s", msg.data.c_str());
+            // checkNewStation(msg.data.c_str());
         }
         rclcpp::Subscription<std_msgs::msg::int8>::SharedPtr subscription_;
 };
