@@ -4,7 +4,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/int8.hpp"
 
 using namespace std::chrono_literals;
 
@@ -12,27 +12,27 @@ class radioStationPub : public rclcpp::Node {
 
     public:
         radioStationPub() : Node("radioStationPub"), count_(0) {
-            publisher_ = this->create_publisher<std_msgs::msg::String>("eyebot_radioStation", 10);
+            publisher_ = this->create_publisher<std_msgs::msg::int8>("eyebot_radioStation", 10);
             timer_ = this->create_wall_timer(500ms, std::bind(&radioStationPub::callback, this));
         }
 
     private:
         void callback() {
-            auto message = std_msgs::msg::String();
+            auto message = std_msgs::msg::int8();
             
             if(count_ % 10 == 0) {
-                message.data = "2";                                                                               // THIS is the radio station number 
+                message.data = 2;                                                                               // THIS is the radio station number 
             } else {
-                message.data = "1";                                                                               // THIS is the radio station number 
+                message.data = 1;                                                                               // THIS is the radio station number 
             }
             count_++;
 
-            RCLCPP_INFO(this->get_logger(), "Publishing Radio Station: %s", message.data.c_str());
+            RCLCPP_INFO(this->get_logger(), "Publishing Radio Station: %d", message.data);
             publisher_->publish(message);
         }
 
         rclcpp::TimerBase::SharedPtr timer_;
-        rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+        rclcpp::Publisher<std_msgs::msg::int8>::SharedPtr publisher_;
         size_t count_;
 };
 
