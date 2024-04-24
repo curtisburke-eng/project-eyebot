@@ -4,6 +4,16 @@
 #include "std_msgs/msg/string.hpp"
 using std::placeholders::_1;
 
+const std_msgs::msg::String & stationNumber_;
+
+void checkNewStation(const std_msgs::msg::String & stationNumber) {
+    if (stationNumber_ != stationNumber){
+        cout << "new station" << endl;
+    }
+    stationNumber_ = stationNumber;
+}
+
+
 class radioStationSub : public rclcpp::Node {
     public:
         radioStationSub() : Node("radioStationSub") {
@@ -13,6 +23,7 @@ class radioStationSub : public rclcpp::Node {
     private:
         void topic_callback(const std_msgs::msg::String & msg) const {
             RCLCPP_INFO(this->get_logger(), "Radio Station Recieved: %s", msg.data.c_str());
+            checkNewStation(msg.data.c_str());
         }
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
