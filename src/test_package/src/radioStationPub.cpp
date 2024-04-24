@@ -12,7 +12,7 @@ class radioStationPub : public rclcpp::Node {
 
     public:
         radioStationPub() : Node("radioStationPub") {
-            publisher_ = this->create_publisher<std_msgs::msg::String>("radioStation", 10);
+            publisher_ = this->create_publisher<std_msgs::msg::String>("eyebot_radioStation", 10);
             timer_ = this->create_wall_timer(500ms, std::bind(&radioStationPub::callback, this));
         }
 
