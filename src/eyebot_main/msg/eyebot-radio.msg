@@ -1,0 +1,2 @@
+bool enableRadio
+int8 stationNum
