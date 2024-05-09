@@ -8,6 +8,9 @@
 
 using namespace std::chrono_literals;
 
+// TODO: Create a custom msg type eyebot_radio with members of enable and stationNum and volume? 
+
+
 class radioStationPub : public rclcpp::Node {
 
     public:
@@ -39,6 +42,7 @@ class radioStationPub : public rclcpp::Node {
 int main(int argc, char * argv[]) {
   
   rclcpp::init(argc, argv);
+  
   rclcpp::spin(std::make_shared<radioStationPub>());
   rclcpp::shutdown();
   
