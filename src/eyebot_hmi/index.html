@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Rosbridge demo</h1>
+
+    <p>To see this page update:</p>
+    <ul>
+      <li>Run a Rosbridge connection at <code>ws://localhost:9090</code></li>
+      <li>Start publishing ROS messages to <code>/my_topic</code></li>
+    </ul>
+
+    <p>View the full tutorial at <a href="https://foxglove.dev/blog/using-rosbridge-with-ros1" target="_blank">Using Rosbridge with ROS 1</a> or <a href="https://foxglove.dev/blog/using-rosbridge-with-ros2" target="_blank">Using Rosbridge with ROS 2</a>.</p>
+
+    <hr/>
+
+    <p>Connection: <span id="status" style="font-weight: bold;">N/A</span></p>
+    <p><code>topic</code> messages received: <ul id="messages" style="font-weight: bold;"></ul></p>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
+
+    <script type="text/javascript" type="text/javascript">
+
+        // Create ros object to communicate over your Rosbridge connection
+        const ros = new ROSLIB.Ros({ url: "ws://10.0.0.121:9090" });
+
+        // When the Rosbridge server connects, fill the span with id "status" with "successful"
+        ros.on("connection", () => {
+        document.getElementById("status").innerHTML = "successful";
+        });
+
+        // When the Rosbridge server experiences an error, fill the "status" span with the returned error
+        ros.on("error", (error) => {
+        document.getElementById("status").innerHTML = `errored out (${error})`;
+        });
+
+        // When the Rosbridge server shuts down, fill the "status" span with "closed"
+        ros.on("close", () => {
+        document.getElementById("status").innerHTML = "closed";
+        });
+        
+        // ----------------------
+        // Subscribing to a Topic
+        // ----------------------
+
+        // Like when publishing a topic, we first create a Topic object with details of the topic's name
+        // and message type. Note that we can call publish or subscribe on the same topic object.
+        var listener = new ROSLIB.Topic({
+            ros : ros,
+            name : 'topic',
+            messageType : 'std_msgs/String'
+        });
+
+        // Then we add a callback to be called every time a message is published on this topic.
+        listener.subscribe(function(message) {
+            console.log('Received message on ' + listener.name + ': ' + message.data);
+            const ul = document.getElementById("messages");
+            const newMessage = document.createElement("li");
+            newMessage.appendChild(document.createTextNode(message.data));
+            ul.appendChild(newMessage);
+            // If desired, we can unsubscribe from the topic as well.
+            //listener.unsubscribe();
+        });
+    </script>
+  </body>
+</html>
