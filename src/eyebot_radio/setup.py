@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "eyebot_radio_node = src.eyebot_radio:main"
+            "eyebot_radio_node = eyebot_radio.eyebot_radio_node:main"
         ],
     },
 )
