@@ -63,6 +63,28 @@
             // If desired, we can unsubscribe from the topic as well.
             //listener.unsubscribe();
         });
+
+        // ------------------
+        // Publishing a Topic
+        // ------------------
+
+        // First, we create a Topic object with details of the topic's name and message type.
+        var talker = new ROSLIB.Topic({
+            ros : ros,
+            name : 'topic',
+            messageType : 'std_msgs/String'
+        });
+
+        // Then we create the payload to be published. The object we pass in to ros.Message matches the
+        // fields defined in the geometry_msgs/Twist.msg definition.
+        var pub_msg = {
+            data: "Sup Wurld"
+        };
+
+        // And finally, publish.
+        talker.publish(pub_msg);
+
+        
     </script>
   </body>
 </html>
