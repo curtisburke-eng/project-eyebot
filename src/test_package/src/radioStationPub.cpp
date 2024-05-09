@@ -4,7 +4,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/Int8.hpp"
 
 using namespace std::chrono_literals;
 
@@ -21,7 +21,7 @@ class radioStationPub : public rclcpp::Node {
 
     private:
         void callback() {
-            auto message = std_msgs::msg::int8();
+            auto message = std_msgs::msg::Int8();
             
             if(count_ % 10 == 0) {
                 message.data = 2;                                                                               // THIS is the radio station number 
@@ -35,7 +35,7 @@ class radioStationPub : public rclcpp::Node {
         }
 
         rclcpp::TimerBase::SharedPtr timer_;
-        rclcpp::Publisher<std_msgs::msg::int8>::SharedPtr publisher_;
+        rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr publisher_;
         size_t count_;
 };
 
