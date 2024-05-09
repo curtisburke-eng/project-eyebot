@@ -4,7 +4,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/Int8.hpp"
+#include "std_msgs/msg/int8.hpp"
 
 using namespace std::chrono_literals;
 
