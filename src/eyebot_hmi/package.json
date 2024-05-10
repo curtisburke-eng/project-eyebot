@@ -1,0 +1,19 @@
+{
+    "name": "eyebot_hmi",
+    "version": "1.0.0",
+    "description": "A web interface to simulate the motion, path planning, and navigation of an eyebot prototype.",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "bootstrap": "5.3.3",
+      "jquery": "3.7.1",
+      "handlebars": "4.7.8",
+      "three": "^0.164.1",
+      "roslib":"^1.4.1"  
+    }
+  }
