@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import * as THREE from '../node_modules/three/build/three.module.min.js'
 
 Array.prototype.remove = function (from, to) {
 	var rest = this.slice((to || from) + 1 || this.length);
@@ -7,10 +7,10 @@ Array.prototype.remove = function (from, to) {
 };
 
 // THREE.js
-scene = new THREE.Scene();
+const scene = new THREE.Scene();
 
 var canvasHeight = 570;
-var canvasWidth = $('#robot').width() - 5;
+var canvasWidth = $('#eyebotSim').width() - 5;
 
 var camera = new THREE.PerspectiveCamera(60, canvasWidth / canvasHeight, 0.1, 1000);
 camera.position.set(3.16, 1.92, 2.76);
@@ -23,11 +23,11 @@ renderer.setSize(canvasWidth*2, canvasHeight*2);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-renderer.domElement.id = 'robotcanvas';
+renderer.domElement.id = 'simCanvas';
 renderer.domElement.style.width = canvasWidth + 'px';
 renderer.domElement.style.height = canvasHeight + 'px';
 
-document.getElementById('robot').appendChild(renderer.domElement);
+document.getElementById('eyebotSim').appendChild(renderer.domElement);
 
 
 // Light sources
@@ -59,10 +59,10 @@ scene.add( ambientLight );
 
 
 
-var grouper = new modelGrouper( camera, $('#robot')[0], scene);
+var grouper = new modelGrouper( camera, $('#eyebotSim')[0], scene);
 grouper.initGroupData(groups);
 
-// Robot - load colored binary STL
+// eyebotSim - load colored binary STL
 var loaderColored = new THREE.STLLoader( );
 
 var loaded = 0;
@@ -94,7 +94,7 @@ function createMesh(meshName){
 
 for (var meshName in grouper.meshes) {
 	to_load++;
-	loaderColored.load( "stl/robot/" + meshName, createMesh(meshName) );
+	loaderColored.load( "stl/eyebotSim/" + meshName, createMesh(meshName) );
 }
 
 function setup_models() {
@@ -123,7 +123,7 @@ function init() {
 
 function onWindowResize() {
 
-	canvasWidth = $('#robot').width() - 5;
+	canvasWidth = $('#eyebotSim').width() - 5;
 
 	camera.aspect = canvasWidth / canvasHeight;
 	camera.updateProjectionMatrix();
