@@ -204,7 +204,7 @@ function animate() {
 	// }
 
 	render();
-
+	// Test comment to show Sam
 	// stats.update();
 
 }
