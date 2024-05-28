@@ -5,11 +5,11 @@
 // 
 
 // Create ros object to communicate over your Rosbridge connection
-const ros = new ROSLIB.Ros({ url: "ws://10.0.0.121:9090" });
+const ros = new ROSLIB.Ros({ url: "ws://10.0.0.148:9090" });
 
 // When the Rosbridge server connects, fill the span with id "status" with "successful"
 ros.on("connection", () => {
-    document.getElementById("status").innerHTML = "successful";
+    document.getElementById("status").innerHTML = "Successful";
 });
 
 // When the Rosbridge server experiences an error, fill the "status" span with the returned error
