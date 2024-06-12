@@ -38,7 +38,7 @@ def main():
         return (data, pyaudio.paContinue)
 
     # open stream using callback
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()), channels=wf.getnchannels(), rate=wf.getframerate(), output=True, stream_callback=callback)
+    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()), channels=wf.getnchannels(), rate=wf.getframerate(), output=True,output_device_index=0, stream_callback=callback)
 
     # start the stream
     stream.start_stream()
