@@ -27,7 +27,7 @@ def main():
 
 
     # you audio here
-    wf = wave.open('~/eyebot_ws/src/project-eyebot/audio/GNRhello.wav', 'rb')
+    wf = wave.open('/home/mr-burke/eyebot_ws/src/project-eyebot/audio/GNRhello.wav', 'rb')
 
     # instantiate PyAudio
     p = pyaudio.PyAudio()
