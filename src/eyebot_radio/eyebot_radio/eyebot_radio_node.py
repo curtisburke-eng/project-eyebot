@@ -43,8 +43,12 @@ def main():
     # start the stream
     stream.start_stream()
 
+    # Wait for stream to finish (4)
+    while stream.is_active():
+        time.sleep(0.1)
+
     # stop stream
-    stream.stop_stream()
+    # stream.stop_stream()
     stream.close()
     wf.close()
 
