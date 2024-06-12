@@ -1,6 +1,6 @@
 #!/usr/bin python3
-import rclpy
-from rclpy.node import Node
+# import rclpy
+# from rclpy.node import Node
 import pyaudio
 import wave
 import time
