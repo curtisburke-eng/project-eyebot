@@ -6,11 +6,11 @@ import wave
 import time
 
 
-class eyebotRadioNode(Node):
-    # Define a consructor
-    def __init__(self):
-        super().__init__("eyebot_radio_node")
-        self.get_logger().info("Hello from ROS2")
+# class eyebotRadioNode(Node):
+#     # Define a consructor
+#     def __init__(self):
+#         super().__init__("eyebot_radio_node")
+#         self.get_logger().info("Hello from ROS2")
 
 # Main function
 def main():
