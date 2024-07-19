@@ -1,6 +1,6 @@
-import rclpy
-from rclpy.node import Node
-from std_msgs.msg import Int16
+# import rclpy
+# from rclpy.node import Node
+# from std_msgs.msg import Int16
 import os
 import time
 from datetime import datetime
@@ -20,21 +20,21 @@ class Station:
         self.length = length
         self.timeFactor = length / SEC_PER_DAY
 
-class RadioNode(Node):
-    def __init__(self):
-        super().__init__('radio_node')
-        self.subscription = self.create_subscription(
-            Int16,
-            'radioStation',
-            self.listenerCallback,
-            10)
-        self.subscription  # prevent unused variable warning
-        global cmdStation
-        self.cmdStation = cmdStation
+# class RadioNode(Node):
+#     def __init__(self):
+#         super().__init__('radio_node')
+#         self.subscription = self.create_subscription(
+#             Int16,
+#             'radioStation',
+#             self.listenerCallback,
+#             10)
+#         self.subscription  # prevent unused variable warning
+#         global cmdStation
+#         self.cmdStation = cmdStation
 
-    def listenerCallback(self, msg):
-        global cmdStation
-        cmdStation = msg.data
+#     def listenerCallback(self, msg):
+#         global cmdStation
+#         cmdStation = msg.data
 
 # --- Function Definitions ---------------------------------------
 # Get the current time of day and convert it to a number of seconds
@@ -68,7 +68,7 @@ def playStation(station):
     currentTimestamp = currentTime / station.timeFactor
 
     # Play the audio file
-    os.system(f"omxplayer --pos {currentTimestamp} {station.filePath}")
+    os.system(f"play {station.filePath} trim {currentTimestamp} {station.length}")
 
 
 
@@ -76,21 +76,28 @@ def playStation(station):
 def main(args=None):
     global cmdStation, currentStation
 
-    rclpy.init(args=args)
-    radioNode = RadioNode()
+    # rclpy.init(args=args)
+    # radioNode = RadioNode()
 
     try:
         while rclpy.ok():
             # Check the subscription to the radioStation topic
-            rclpy.spin_once(radioNode)
+            # rclpy.spin_once(radioNode)
+
+            # Use terminal input for testing
+            cmdStation = int(input("Enter station number: "))
 
             # Compare command station (from ROS topic) to current station
             if currentStation is None or currentStation.id != cmdStation: # if a new station is requested
                 # Get the info for the new current station
                 currentStation = getStation(cmdStation)
+                
+                # Stop current audio output
+                os.system("killall play")
+                time.sleep(1)
+
                 # Play the audio on the new current station
                 playStation(currentStation)
-
                 time.sleep(1)  # Add a short delay to avoid rapid re-triggering
 
     except KeyboardInterrupt:
