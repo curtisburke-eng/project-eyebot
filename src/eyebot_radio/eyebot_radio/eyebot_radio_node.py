@@ -80,7 +80,8 @@ def main(args=None):
     # radioNode = RadioNode()
 
     try:
-        while rclpy.ok():
+        while True:
+        # while rclpy.ok():
             # Check the subscription to the radioStation topic
             # rclpy.spin_once(radioNode)
 
