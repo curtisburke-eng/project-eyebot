@@ -66,11 +66,15 @@ def playStation(station):
     currentTime = getCurrentTime()
     # Convert the time of day to the corresponding time within the station track (file)
     currentTimestamp = currentTime / station.timeFactor
-
+    
+    # for testing/debug:
+    currentTimestamp = 10
     # Play the audio file
     os.system(f"play {station.filePath} trim {currentTimestamp} {station.length}")
 
-
+# factor = 70 seconds / 86400 sec  = 0.0008101 ** TODO: I think the factor and current timestamps needs to be a double or float
+# currentTime = 12 * 3600 + 5 * 60 + 10 = 43200 + 300+10 = 43310
+# currentTimestamp = 43310 / 0.0008101 = 1.99 
 
 # --- Main Program ---------------------------------------
 def main(args=None):
