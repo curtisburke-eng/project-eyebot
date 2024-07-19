@@ -1,63 +1,103 @@
-#!/usr/bin python3
-# import rclpy
-# from rclpy.node import Node
-import pyaudio
-import wave
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Int16
+import os
 import time
+from datetime import datetime
+
+# Define global variables
+SEC_PER_DAY = 86400
+cmdStation = 0
+currentStation = None
+user = "mr-burke"
+
+# --- Class Definitions ---------------------------------------
+class Station:
+    def __init__(self, id, name, filePath, length):
+        self.id = id
+        self.name = name
+        self.filePath = filePath
+        self.length = length
+        self.timeFactor = length / SEC_PER_DAY
+
+class RadioNode(Node):
+    def __init__(self):
+        super().__init__('radio_node')
+        self.subscription = self.create_subscription(
+            Int16,
+            'radioStation',
+            self.listenerCallback,
+            10)
+        self.subscription  # prevent unused variable warning
+        global cmdStation
+        self.cmdStation = cmdStation
+
+    def listenerCallback(self, msg):
+        global cmdStation
+        cmdStation = msg.data
+
+# --- Function Definitions ---------------------------------------
+# Get the current time of day and convert it to a number of seconds
+def getCurrentTime():       # in Seconds
+    now = datetime.now()
+    return now.hour * 3600 + now.minute * 60 + now.second
 
 
-# class eyebotRadioNode(Node):
-#     # Define a consructor
-#     def __init__(self):
-#         super().__init__("eyebot_radio_node")
-#         self.get_logger().info("Hello from ROS2")
-
-# Main function
-def main():
-
-    # rclpy.init()
-    # node = eyebotRadioNode()
-
-    # rclpy.spin(node)
-    # rclpy.shutdown()
-
-
-
-    paused = False    # global to track if the audio is paused
+# Assign station info to current station class 
+def getStation(cmdStation):
+    
+    if cmdStation == 1:
+        return Station(1, "Enclave-Radio", "~/eyebot_ws/src/project-eyebot/audio/enclave/enclave.wav", 70)
+    
+    elif cmdStation == 2:
+        return Station(2, "Galaxy-News-Radio", "~/eyebot_ws/src/project-eyebot/audio/GNR/civilization.wav", 180)
+    
+    elif cmdStation == 3:
+        return Station(3, "Diamond-City-Radio", "/path/to/station3/file.mp3", 5400)
+    
+    # Default
+    else:
+        return Station(0, "Default Station", "/path/to/default/file.mp3", 3600)
 
 
-    # you audio here
-    wf = wave.open('/home/mr-burke/eyebot_ws/src/project-eyebot/audio/GNRhello.wav', 'rb')
+# Play the audio file for the current station at a given timestamp
+def playStation(station):
+    # Get the current time of day
+    currentTime = getCurrentTime()
+    # Convert the time of day to the corresponding time within the station track (file)
+    currentTimestamp = currentTime / station.timeFactor
 
-    # instantiate PyAudio
-    p = pyaudio.PyAudio()
-
-    # define callback
-    def callback(in_data, frame_count, time_info, status):
-        data = wf.readframes(frame_count)
-        return (data, pyaudio.paContinue)
-
-    # open stream using callback
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()), channels=wf.getnchannels(), rate=wf.getframerate(), output=True,output_device_index=0, stream_callback=callback)
-
-    # start the stream
-    stream.start_stream()
-
-    # Wait for stream to finish (4)
-    while stream.is_active():
-        time.sleep(0.1)
-
-    # stop stream
-    # stream.stop_stream()
-    stream.close()
-    wf.close()
-
-    # close PyAudio
-    p.terminate()
+    # Play the audio file
+    os.system(f"omxplayer --pos {currentTimestamp} {station.filePath}")
 
 
-if __name__ == "__main__":
+
+# --- Main Program ---------------------------------------
+def main(args=None):
+    global cmdStation, currentStation
+
+    rclpy.init(args=args)
+    radioNode = RadioNode()
+
     try:
-        main()
+        while rclpy.ok():
+            # Check the subscription to the radioStation topic
+            rclpy.spin_once(radioNode)
+
+            # Compare command station (from ROS topic) to current station
+            if currentStation is None or currentStation.id != cmdStation: # if a new station is requested
+                # Get the info for the new current station
+                currentStation = getStation(cmdStation)
+                # Play the audio on the new current station
+                playStation(currentStation)
+
+                time.sleep(1)  # Add a short delay to avoid rapid re-triggering
+
     except KeyboardInterrupt:
         pass
+
+    finally:
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
