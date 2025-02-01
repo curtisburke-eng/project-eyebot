@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Button</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+    <button class="button" onclick="publishMessage()">Publish to MQTT</button>
+
+    <!-- Include the MQTT.js library first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script>
+       
+        var broker = {
+            hostname: "192.168.50.27",
+            port: 9001,
+            clientId: "web_" + Math.random().toString(16).substr(2, 8)
+        };
+ 
+        var topic = "test";
+
+        // MQTT client instance
+        var client = new Paho.MQTT.Client(broker.hostname, broker.port, broker.clientId);
+ 
+        function onConnect() {
+            console.log("Connected to MQTT broker");
+            client.subscribe('test');
+            
+            console.log("Subscribed to topic: " + topic);
+        }
+
+        function onFailure(message) {
+            console.log("Connection to MQTT broker failed: " + message.errorMessage);
+        } 
+
+        function onMessageArrived(message) {
+            console.log("Received message: " + message.payloadString); 
+            document.getElementById("message").innerHTML = "Received message: " + message.payloadString;
+        }
+        function publishMessage() {
+            let message = new Paho.MQTT.Message("Button works");
+            message.destinationName = topic;
+            client.send(message);
+
+        }
+        // Set callback functions
+        client.onConnectionLost = onFailure;
+        client.onMessageArrived = onMessageArrived;
+
+        // Connect to MQTT broker
+        client.connect({
+            onSuccess: onConnect,
+            onFailure: onFailure,
+            useSSL: false
+        });
+
+    </script>
+    <h1>MQTT Subscriber</h1>
+    <div id="message"></div>
+</body>
+
+</html>
